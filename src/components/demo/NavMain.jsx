@@ -1,20 +1,13 @@
-import { ChevronRight } from "lucide-react";
-
+import { Link } from "react-router-dom";
 import {
   Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
 } from "../ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "../ui/sidebar";
 
 export function NavMain({ items }) {
@@ -26,10 +19,10 @@ export function NavMain({ items }) {
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <a href={item.url}>
+                <Link to={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </Collapsible>

@@ -28,7 +28,7 @@ function DropDown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">Sign Up</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="text-black w-56 bg-white/70 rounded-xl outline-none">
+      <DropdownMenuContent className="text-black w-56 bg-white/100 rounded-xl">
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition} defaultValue="Doctor">
           <DropdownMenuRadioItem  onClick={() => handleSignupRedirect("Doctor")} value="Doctor">Doctor</DropdownMenuRadioItem>
           <DropdownMenuRadioItem  onClick={() => handleSignupRedirect("Patient")} value="Patient">Patient</DropdownMenuRadioItem>

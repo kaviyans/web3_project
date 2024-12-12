@@ -9,9 +9,10 @@ import {
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 
-function SignupDoctor() {
+function Signin() {
   return (
-    <Card className="mx-auto max-w-sm mt-[20px]">
+    <div className="max-h-1 min-h-screen flex items-center justify-center bg-black">
+    <Card className="w-full max-w-sm bg-white p-2 rounded-3xl shadow-md">
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
@@ -73,7 +74,8 @@ function SignupDoctor() {
         </div>
       </CardContent>
     </Card>
+    </div>
   )
 }
 
-export default SignupDoctor;
+export default Signin;

@@ -2,17 +2,12 @@ import {
   BookOpen,
   Bot,
   Command,
-  Frame,
   LifeBuoy,
-  Map,
-  PieChart,
   Send,
-  Settings2,
   SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "./navMain"
-import { NavProjects } from "./NavProjects"
 import { NavSecondary } from "./NavSecondary"
 import { NavUser } from "./NavUser"
 import {
@@ -34,18 +29,18 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard", 
       icon: SquareTerminal,
       isActive: true,
     },
     {
       title: "Prescription",
-      url: "#",
+      url: "/prescription", 
       icon: Bot,
     },
     {
       title: "Documentation",
-      url: "#",
+      url: "/documentation", 
       icon: BookOpen,
     },
   ],
@@ -56,20 +51,22 @@ const data = {
 };
 console.log("appsidebar");
 
-export function AppSidebar(props) {
+export function AppSidebar({ handleLogout, ...props }) {
   return (
-    <Sidebar className="text-gray-100" variant="inset" {...props}>
-      <SidebarHeader className="bg-black rounded-t-xl">
+    <Sidebar  className="text-white bg-black shadow-lg shadow-stone-300" variant="inset" {...props}>
+      <SidebarHeader className="bg-black ">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <a href="#" className="flex items-center space-x-2">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white text-black">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate text-xs text-gray-400">
+                    Enterprise
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -80,9 +77,9 @@ export function AppSidebar(props) {
         <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter className="bg-black rounded-b-xl">
-        <NavUser user={data.user} />
+      <SidebarFooter className="bg-black border-t border-gray-700">
+        <NavUser user={data.user} handleLogout={handleLogout} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
