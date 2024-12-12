@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./content/Login";
 import Signin from "./content/Signin";
+import Dashboard from "./content/Dashboard";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,8 +24,8 @@ function App() {
         ) : (
           <>
             {/* Example dashboard route */}
-            {/* <Route path="/dashboard" element={<div>Dashboard</div>} />
-            <Route path="*" element={<Navigate to="/dashboard" />} /> */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<Navigate to="/dashboard" />} />
           </>
         )}
       </Routes>
