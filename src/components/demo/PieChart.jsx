@@ -48,7 +48,7 @@ const chartConfig = {
 
 export function Pchart() {
   return (
-    <Card className="flex flex-col bg-stone-300">
+    <Card className="flex flex-col bg-white">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pie Chart - Legend</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

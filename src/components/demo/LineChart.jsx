@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Line, LineChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -113,7 +113,7 @@ const aggregateData = (data, filter) => {
 
 
 
-function Chart() {
+function LineCharpres() {
   const [activeFilter, setActiveFilter] = React.useState("day"); // day, week, or month
   const [filteredData, setFilteredData] = React.useState(chartData);
 
@@ -125,7 +125,7 @@ function Chart() {
     <Card className="bg-white">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle><h2 className="text-2xl">Patient Count Chart</h2></CardTitle>    
+          <CardTitle><h2 className="text-2xl">Prescription Count</h2></CardTitle>    
         </div>
         <div className="flex">
           {["day", "week", "month"].map((filter) => (
@@ -148,7 +148,7 @@ function Chart() {
           config={{ views: { label: "Patient Count" } }}
           className="aspect-auto h-[250px] w-full"
         >
-          <BarChart
+          <LineChart
             accessibilityLayer
             data={filteredData}
             margin={{
@@ -174,12 +174,12 @@ function Chart() {
                 />
               }
             />
-            <Bar dataKey="patientCount" fill="hsl(var(--chart-1))" />
-          </BarChart>
+            <Line dataKey="patientCount" fill="hsl(var(--chart-1))" />
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
 }
 
-export default Chart;
+export default LineCharpres;
