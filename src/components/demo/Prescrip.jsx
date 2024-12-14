@@ -11,6 +11,7 @@ import {
 } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import Tabletsearch from "./Tabletsearch";
 
 function Prescrip() {
   const [errors, setErrors] = useState({});
@@ -70,7 +71,7 @@ function Prescrip() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin}>
-          <div className="grid gap-4">
+          <div className="grid gap-4 text-black">
             <div className="grid gap-2">
               <Label htmlFor="username">Patient Username</Label>
               <Input
@@ -108,7 +109,8 @@ function Prescrip() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <Label htmlFor={`tablet-${index}`}>Tablet Name</Label>
+                  <Label htmlFor={`tablet-${index}`}>Tablet Name</Label>
+                    {/* 
                     <Input
                       id={`tablet-${index}`}
                       name={`tablet-${index}`}
@@ -118,7 +120,8 @@ function Prescrip() {
                       onChange={(e) =>
                         handleTabletChange(index, "tablet", e.target.value)
                       }
-                    />
+                    /> */}
+                    <Tabletsearch />
                   </div>
                   <div className="flex-1">
                     <Label htmlFor={`count-${index}`}>Count</Label>

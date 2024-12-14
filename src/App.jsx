@@ -34,7 +34,6 @@ function App() {
     <BrowserRouter>
     {isLoggedIn ? (
       <SidebarProvider>
-        <div className="flex">
           <AppSidebar handleLogout={handleLogout} role={role}/>
               <div className="flex-1">
             <Routes>
@@ -54,7 +53,6 @@ function App() {
               <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : "/dashboardpat"} />} />
             </Routes>
           </div>
-        </div>
       </SidebarProvider>
     ) : (
       <Routes>

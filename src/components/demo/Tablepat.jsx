@@ -20,19 +20,19 @@ const hospitalData = [
   {
     id: "HOSP002",
     name: "General Health Clinic",
-    validity: "2025-01-15",
+    validity: "2024-01-15",
     qrCodeUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=QR+Code+2",
   },
   {
     id: "HOSP003",
     name: "National Medical Center",
-    validity: "2025-06-30",
+    validity: "2024-06-30",
     qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
   },
   {
     id: "HOSP004",
     name: "Green Valley Hospital",
-    validity: "2025-12-01",
+    validity: "2024-12-01",
     qrCodeUrl: "https://via.placeholder.com/150/FFFF00/000000?text=QR+Code+4",
   },
   {
@@ -50,13 +50,13 @@ const hospitalData = [
   {
     id: "HOSP003",
     name: "National Medical Center",
-    validity: "2025-06-30",
+    validity: "2024-06-30",
     qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
   },
   {
     id: "HOSP004",
     name: "Green Valley Hospital",
-    validity: "2025-12-01",
+    validity: "2024-12-01",
     qrCodeUrl: "https://via.placeholder.com/150/FFFF00/000000?text=QR+Code+4",
   },
   {
@@ -74,7 +74,7 @@ const hospitalData = [
   {
     id: "HOSP003",
     name: "National Medical Center",
-    validity: "2025-06-30",
+    validity: "2024-06-30",
     qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
   },
   {
@@ -86,36 +86,34 @@ const hospitalData = [
 ]
 
 export default function TableWithQRCode() {
-  const [selectedQr, setSelectedQr] = useState(null)
+  const [selectedQr, setSelectedQr] = useState(null);
 
   const handleQrClick = (qrCodeUrl) => {
-    setSelectedQr(qrCodeUrl)
-  }
+    setSelectedQr(qrCodeUrl);
+  };
 
   const handleClosePopup = () => {
-    setSelectedQr(null)
-  }
+    setSelectedQr(null);
+  };
+
+  const sortedHospitalData = hospitalData.sort((a, b) => {
+    const dateA = new Date(a.validity);
+    const dateB = new Date(b.validity);
+    return dateB - dateA;
+  });
 
   const handleDownloadQr = () => {
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")
-    const img = new Image()
+    const link = document.createElement("a");
+    link.href = selectedQr;
+    link.download = "QRCode.png";
+    link.click();
+  };
 
-    img.crossOrigin = "anonymous" 
-    img.src = selectedQr
-
-    img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx.drawImage(img, 0, 0)
-      const pngUrl = canvas.toDataURL("image/png")
-      const link = document.createElement("a")
-      link.href = pngUrl
-      link.download = "QRCode.png"
-      link.click()
-      canvas.remove()
-    }
-  }
+  const isExpired = (validityDate) => {
+    const currentDate = new Date();
+    const validity = new Date(validityDate);
+    return currentDate > validity;
+  };
 
   return (
     <div>
@@ -126,25 +124,33 @@ export default function TableWithQRCode() {
             <TableHead className="w-[400px]">Hospital id</TableHead>
             <TableHead className="w-[400px]">Hospital Name</TableHead>
             <TableHead>Validity Date</TableHead>
-            <TableHead className="">QR Code</TableHead>
+            <TableHead>QR Code</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {hospitalData.map((hospital) => (
-            <TableRow key={hospital.id} className="h-16">
-              <TableCell className="w-[200px] font-medium">{hospital.id}</TableCell>
-              <TableCell className="w-[200px] font-medium">{hospital.name}</TableCell>
-              <TableCell className="w-[400px] font-medium">{hospital.validity}</TableCell>
-              <TableCell className="w-[400px] font-medium">
-                <button
-                  className="text-blue-600 underline"
-                  onClick={() => handleQrClick(hospital.qrCodeUrl)}
-                >
-                  View QR Code
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {sortedHospitalData.map((hospital) => {
+            const expired = isExpired(hospital.validity); // Check if the validity date is expired
+
+            return (
+              <TableRow
+                key={hospital.id}
+                className={`h-16 ${expired ? "bg-gray-600" : ""}`} // Add background color for expired rows
+              >
+                <TableCell className="w-[200px] font-medium">{hospital.id}</TableCell>
+                <TableCell className="w-[200px] font-medium">{hospital.name}</TableCell>
+                <TableCell className="w-[400px] font-medium">{hospital.validity}</TableCell>
+                <TableCell className="w-[400px] font-medium">
+                  <button
+                    className={`text-blue-600 underline ${expired ? "cursor-not-allowed" : ""}`}
+                    onClick={() => !expired && handleQrClick(hospital.qrCodeUrl)}
+                    disabled={expired} // Disable button if expired
+                  >
+                    View QR Code
+                  </button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 
@@ -172,5 +178,5 @@ export default function TableWithQRCode() {
         </div>
       )}
     </div>
-  )
+  );
 }
