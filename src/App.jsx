@@ -31,38 +31,40 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isLoggedIn ? (
-        <SidebarProvider>
-          <div className="flex">
-            <AppSidebar handleLogout={handleLogout} />
-            <div className="flex-1">
-              <Routes>
-                {role === "doctor" && (
-                  <>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/prescription" element={<Prescription />} />
-                  </>
-                )}
-                {role === "patient" && (
-                  <>
-                    <Route path="/dashboardpat" element={<Dashboardpat />} />
-                  </>
-                )}
-                <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : "/dashboardpat"} />} />
-              </Routes>
-            </div>
+    {isLoggedIn ? (
+      <SidebarProvider>
+        <div className="flex">
+          <AppSidebar handleLogout={handleLogout} />
+          <div className="flex-1">
+            <Routes>
+              {role === "doctor" && (
+                <>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/prescription" element={<Prescription />} />
+                </>
+              )}
+              {role === "patient" && (
+                <>
+                  <Route path="/dashboardpat" element={<Dashboardpat />} />
+                </>
+              )}
+              {/* Default route */}
+              <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : "/dashboardpat"} />} />
+            </Routes>
           </div>
-        </SidebarProvider>
-      ) : (
-        <Routes>
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/signup" element={<Signin />} />
-          <Route path="/signupd" element={<SignupDoctor />} />
-          <Route path="/signupp" element={<SignupPatient />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      )}
-    </BrowserRouter>
+        </div>
+      </SidebarProvider>
+    ) : (
+      <Routes>
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
+        <Route path="/signup" element={<Signin />} />
+        <Route path="/signupd" element={<SignupDoctor />} />
+        <Route path="/signupp" element={<SignupPatient />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    )}
+  </BrowserRouter>
+
   );
 }
 

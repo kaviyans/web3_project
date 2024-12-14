@@ -13,7 +13,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import DropDown from "@/components/demo/DropDown";
 
-function Login({ setIsLoggedIn }) {
+function Login({ setIsLoggedIn , setRole}) {
   const navigate = useNavigate();
 
   // State for error messages
@@ -32,15 +32,15 @@ function Login({ setIsLoggedIn }) {
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-  
+
     const data = {
       username: formData.get("username"),
       role: formData.get("role"),
       password: formData.get("password"),
     };
-  
+
     const validation = loginSchema.safeParse(data);
-  
+
     if (!validation.success) {
       const errorMessages = validation.error.errors.reduce((acc, err) => {
         acc[err.path[0]] = err.message;
@@ -49,12 +49,16 @@ function Login({ setIsLoggedIn }) {
       setErrors(errorMessages);
       return;
     }
-  
+
     setErrors({});
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("role", data.role);
-    console.log(data.role);
+
+    // Synchronize state immediately
+    setRole(data.role);
     setIsLoggedIn(true);
+
+    // Navigate based on role
     navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
   };
   

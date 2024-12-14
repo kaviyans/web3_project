@@ -13,6 +13,7 @@ import {
 import { Pchart } from "@/components/demo/PieChart";
 
 function Dashboard() {
+
   return (
       <SidebarInset className="bg-black">
         <header className="flex h-16 shrink-0 items-center gap-2">
