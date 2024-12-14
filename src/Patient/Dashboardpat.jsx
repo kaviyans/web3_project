@@ -13,7 +13,7 @@ import {
   
   function Dashboardpat() {
     return (
-      <SidebarInset className="bg-black w-full h-full min-h-screen">
+      <SidebarInset className="bg-black w-full h-full min-h-full">
         <header className="w-full flex h-16 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="bg-white -ml-1 rounded-xl" />
@@ -29,7 +29,10 @@ import {
             </Breadcrumb>
           </div>
         </header>
-        <div className="w-screen px-6">
+        <div className="flex justify-center items-center text-white text-2xl">
+          <h1>PRESCRITION QR</h1>
+        </div>
+        <div className="w-full p-6">
           <Tablepat />
         </div>
       </SidebarInset>

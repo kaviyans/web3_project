@@ -9,6 +9,7 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/demo/AppSidebar";
 import Prescription from "./Doctor/Prescription";
 import Dashboardpat from "./Patient/Dashboardpat";
+import Tablets from "./Patient/Tablets";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,8 +35,8 @@ function App() {
     {isLoggedIn ? (
       <SidebarProvider>
         <div className="flex">
-          <AppSidebar handleLogout={handleLogout} />
-          <div className="flex-1">
+          <AppSidebar handleLogout={handleLogout} role={role}/>
+              <div className="flex-1">
             <Routes>
               {role === "doctor" && (
                 <>
@@ -46,6 +47,7 @@ function App() {
               {role === "patient" && (
                 <>
                   <Route path="/dashboardpat" element={<Dashboardpat />} />
+                  <Route path="/tablets" element={<Tablets />} />
                 </>
               )}
               {/* Default route */}
@@ -60,6 +62,7 @@ function App() {
         <Route path="/signup" element={<Signin />} />
         <Route path="/signupd" element={<SignupDoctor />} />
         <Route path="/signupp" element={<SignupPatient />} />
+        {/* <Route path= "/prof" element = {<Profile />} /> */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     )}
