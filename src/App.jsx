@@ -8,18 +8,24 @@ import SignupPatient from "./profile/SignupPatient";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/demo/AppSidebar";
 import Prescription from "./Doctor/Prescription";
+import Dashboardpat from "./Patient/Dashboardpat";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const userRole = localStorage.getItem("role");
     setIsLoggedIn(loggedIn);
+    setRole(userRole);
   }, []);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", "false");
+    setRole(null);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("role");
     console.log("User logged out");
   };
 
@@ -28,15 +34,21 @@ function App() {
       {isLoggedIn ? (
         <SidebarProvider>
           <div className="flex">
-            {/* Sidebar */}
             <AppSidebar handleLogout={handleLogout} />
-
-            {/* Main Content */}
             <div className="flex-1">
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/prescription" element={<Prescription />} />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                {role === "doctor" && (
+                  <>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/prescription" element={<Prescription />} />
+                  </>
+                )}
+                {role === "patient" && (
+                  <>
+                    <Route path="/dashboardpat" element={<Dashboardpat />} />
+                  </>
+                )}
+                <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : "/dashboardpat"} />} />
               </Routes>
             </div>
           </div>

@@ -32,16 +32,15 @@ function Login({ setIsLoggedIn }) {
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-
+  
     const data = {
       username: formData.get("username"),
       role: formData.get("role"),
       password: formData.get("password"),
     };
-
-    // Validate using Zod
+  
     const validation = loginSchema.safeParse(data);
-
+  
     if (!validation.success) {
       const errorMessages = validation.error.errors.reduce((acc, err) => {
         acc[err.path[0]] = err.message;
@@ -50,13 +49,15 @@ function Login({ setIsLoggedIn }) {
       setErrors(errorMessages);
       return;
     }
-
-    // Clear errors and proceed with login
+  
     setErrors({});
     localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("role", data.role);
+    console.log(data.role);
     setIsLoggedIn(true);
-    navigate("/dashboard");
+    navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
