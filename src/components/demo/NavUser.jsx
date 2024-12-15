@@ -31,21 +31,18 @@ import { useState } from "react";
 
 export function NavUser({ user, handleLogout }) {
   const { isMobile } = useSidebar();
-  const [isProfileOpen, setProfileOpen] = useState(false);
-
-  const reload = () =>{
-    window.location.reload();
-  }
-  const handleClose = () => {
-    setProfileOpen(false);
-    reload(); 
-  };
 
   // Sample JSON for user profile
   const userProfile = {
     name: user.name,
     email: user.email,
     mobile: "1234567890",
+/**
+ * Closes the profile dialog and refreshes the page.
+ * Sets the state to close the profile dialog and calls the reload function
+ * to refresh the page.
+ */
+
     role: "Doctor",
   };
 
@@ -78,9 +75,12 @@ export function NavUser({ user, handleLogout }) {
               align="end"
               sideOffset={4}
             >
+
+            <Dialog>
+              <DialogTrigger>
+                
               <DropdownMenuLabel
                 className="p-0 font-normal cursor-pointer"
-                onClick={() => setProfileOpen(true)}
               >
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
@@ -93,6 +93,30 @@ export function NavUser({ user, handleLogout }) {
                   </div>
                 </div>
               </DropdownMenuLabel>
+              </DialogTrigger>
+              <DialogContent className="rounded-lg p-6 text-black w-11/12 md:w-1/3">
+                <DialogHeader>
+                  <DialogTitle className="text-lg font-bold">
+                    User Profile
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 mt-4">
+                  <p>
+                    <strong>Name:</strong> {userProfile.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {userProfile.email}
+                  </p>
+                  <p>
+                    <strong>Mobile No.:</strong> {userProfile.mobile}
+                  </p>
+                  <p>
+                    <strong>Role:</strong> {userProfile.role}
+                  </p>
+                </div>
+              </DialogContent>
+            </Dialog>
+            
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut />
                 Log out
@@ -103,37 +127,7 @@ export function NavUser({ user, handleLogout }) {
       </SidebarMenu>
 
       {/* Dialog for User Profile */}
-      <Dialog open={isProfileOpen} onOpenChange={setProfileOpen}>
-        <DialogContent className="rounded-lg p-6 text-black w-11/12 md:w-1/3">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold">
-              User Profile
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col gap-4 mt-4">
-            <p>
-              <strong>Name:</strong> {userProfile.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {userProfile.email}
-            </p>
-            <p>
-              <strong>Mobile No.:</strong> {userProfile.mobile}
-            </p>
-            <p>
-              <strong>Role:</strong> {userProfile.role}
-            </p>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              onClick={handleClose}
-            >
-              Close
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      
     </>
   );
 }

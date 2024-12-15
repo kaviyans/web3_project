@@ -53,10 +53,10 @@ export function AppSidebar({ handleLogout, role, ...props }) {
         ];
 
   // Static `navSecondary`
-  const navSecondary = [
-    { title: "Support", url: "#", icon: LifeBuoy },
-    { title: "Feedback", url: "#", icon: Send },
-  ];
+  // const navSecondary = [
+  //   { title: "Support",  icon: LifeBuoy },
+  //   { title: "Feedback",  icon: Send },
+  // ];
 
   const user = {
     name: "shadcn",
@@ -79,10 +79,7 @@ export function AppSidebar({ handleLogout, role, ...props }) {
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs text-gray-400">
-                    Enterprise
-                  </span>
+                  <span className="truncate font-semibold">MediSure </span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -91,7 +88,7 @@ export function AppSidebar({ handleLogout, role, ...props }) {
       </SidebarHeader>
       <SidebarContent className="bg-black">
         <NavMain items={navMain} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        {role==="patient" && <NavSecondary  className="mt-auto" />}
       </SidebarContent>
       <SidebarFooter className="bg-black border-t border-gray-700">
         <NavUser user={user} handleLogout={handleLogout} />

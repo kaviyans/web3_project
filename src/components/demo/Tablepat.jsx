@@ -10,6 +10,17 @@ import {
   TableRow,
 } from "../ui/table"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog"
+import { Button } from "../ui/button";
+
 const hospitalData = [
   {
     id: "HOSP001",
@@ -140,6 +151,9 @@ export default function TableWithQRCode() {
                 <TableCell className="w-[200px] font-medium">{hospital.name}</TableCell>
                 <TableCell className="w-[400px] font-medium">{hospital.validity}</TableCell>
                 <TableCell className="w-[400px] font-medium">
+
+                <Dialog>
+                  <DialogTrigger asChild>
                   <button
                     className={`text-blue-600 underline ${expired ? "cursor-not-allowed" : ""}`}
                     onClick={() => !expired && handleQrClick(hospital.qrCodeUrl)}
@@ -147,36 +161,35 @@ export default function TableWithQRCode() {
                   >
                     View QR Code
                   </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>QR Code</DialogTitle>
+                      <DialogDescription>
+                        Download this qr code which contains the prescription
+                      </DialogDescription>
+                    </DialogHeader>
+                        <img src={selectedQr} alt="QR Code" className="mb-4 mx-auto" />
+                        <div className="flex flex-col">
+                          <button
+                            onClick={handleDownloadQr}
+                            className="inline-block bg-blue-500 text-white px-4 py-2 rounded"
+                          >
+                            Download QR Code
+                          </button>
+                        </div>
+                  </DialogContent>
+                </Dialog>
+
+
+
+                  
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-
-      {/* QR Code Popup */}
-      {selectedQr && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[300px] text-center">
-            <h2 className="text-lg font-bold mb-4">QR Code</h2>
-            <img src={selectedQr} alt="QR Code" className="mb-4 mx-auto" />
-            <div className="flex flex-col">
-              <button
-                onClick={handleDownloadQr}
-                className="inline-block bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Download QR Code
-              </button>
-              <button
-                onClick={handleClosePopup}
-                className="mt-4 text-red-600 underline"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
