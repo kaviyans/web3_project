@@ -31,11 +31,10 @@ function Prescription() {
       </div>
     </header>
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+    <div className="">
         <div className="rounded-xl md:col-span-2 flex justify-center ">
           <Prescrip />
         </div>
-        <div className="bg-transparent aspect-video rounded-xl bg-muted/50 md:col-span-1" />
       </div>
 
       <div className="min-h-[10vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >

@@ -14,7 +14,7 @@ function Signin() {
     <div className="max-h-1 min-h-screen flex items-center justify-center bg-black">
     <Card className="w-full max-w-sm bg-white p-2 rounded-3xl shadow-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle className="text-2xl">Sign Up as Patient</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
