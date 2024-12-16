@@ -57,16 +57,17 @@ function Prescrip() {
 
     try {
       // Send to backend
-      const response = await fetch("http://127.0.0.1:8000/prescriptions", {
+      const response = await fetch("http://127.0.0.1:8000/submit-prescription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
-
-      if (response.ok) {
-        alert("Prescription submitted successfully!");
+      const result = await response.json();
+      console.log(result)
+      if (!result.ok) {
+        alert("Prescription submitted successfully!", result.Tx_address);
       } else {
         alert("Failed to submit prescription.");
       }

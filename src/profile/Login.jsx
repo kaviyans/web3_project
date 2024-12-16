@@ -62,8 +62,7 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
         body: JSON.stringify(data),
       });
       const result = await response.json();
-      console.log(result.ok)
-      console.log(result.message)
+      console.log(result.user)
       if (result.message === "Login successful") {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", data.role);
@@ -71,8 +70,9 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
         setRole(data.role);
         setIsLoggedIn(true);
         setEmail(data.email);
-        setName(data.name);
-        setPhone(data.phone);
+        setName(result.user.name);
+        setPhone(result.user.phone);
+        console.log(data)
         navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
       } else {
         // Show error from backend
