@@ -38,10 +38,10 @@ function Login({ setIsLoggedIn , setRole}) {
       role: formData.get("role"),
       password: formData.get("password"),
     };
-  
+    console.log(data)
     // Validate data with Zod
     const validation = loginSchema.safeParse(data);
-  
+    // console.log(validation)
     if (!validation.success) {
       const errorMessages = validation.error.errors.reduce((acc, err) => {
         acc[err.path[0]] = err.message;
@@ -54,25 +54,24 @@ function Login({ setIsLoggedIn , setRole}) {
     setErrors({});
   
     try {
-      const response = await fetch("http://your-backend-url/api/login", {
+      const response = await fetch("http://127.0.0.1:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-  
       const result = await response.json();
-  
-      if (response.ok) {
-        // Success: Store details in localStorage and navigate
+      console.log(result.ok)
+      console.log(result.message)
+      if (result.message === "Login successful") {
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("role", result.role);
+        localStorage.setItem("role", data.role);
   
-        setRole(result.role);
+        setRole(data.role);
         setIsLoggedIn(true);
   
-        navigate(result.role === "doctor" ? "/dashboard" : "/dashboardpat");
+        navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
       } else {
         // Show error from backend
         setErrors({ form: result.message || "Login failed. Please try again." });

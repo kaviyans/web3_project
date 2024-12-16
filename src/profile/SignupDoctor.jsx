@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , axios } from "react";
 import { z } from "zod";
 import { Button } from "../components/ui/button";
 import {
@@ -31,46 +31,69 @@ function SignupDoctor() {
         .string()
         .min(6, "Password must be at least 6 characters long.")
         .nonempty("Password is required."),
-      confirmPassword: z.string().nonempty("Confirm password is required."),
-      hospitalCertificate: z.string().nonempty("Hospital verification certificate is required."),
-      doctorCertificate: z.string().nonempty("Doctor certificate is required."),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match.",
-      path: ["confirmPassword"],
+      // confirmPassword: z.string().nonempty("Confirm password is required."),
     });
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+    const handleSignup = async (e) => {
+      e.preventDefault();
 
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      password: formData.get("password"),
-      confirmPassword: formData.get("confirmPassword"),
-      hospitalCertificate: formData.get("hospitalCertificate"),
-      doctorCertificate: formData.get("doctorCertificate"),
+      const formData = new FormData(e.target);
+
+      const data = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        password: formData.get("password"),
+        verified : "declined",
+        role : "doctor"
+      };
+      console.log(JSON.stringify(data))
+      // Validate using Zod
+      const validation = signupSchema.safeParse(data);
+      if (!validation.success) {
+        const errorMessages = validation.error.errors.reduce((acc, err) => {
+          acc[err.path[0]] = err.message;
+          return acc;
+        }, {});
+        setErrors(errorMessages);
+        return;
+      }
+      console.log("hello deepak")
+      setErrors({});
+      
+      // Submit data to backend
+      try {
+        const response = await fetch("http://localhost:8000/doctor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      
+        const responseData = await response.json();
+        console.log(responseData);
+        if (response.ok) {
+          const response = await fetch("http://localhost:8000/api/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+        
+          const responseData = await response.json();
+          console.log(responseData);
+        }else{
+          alert("the user already exist");
+        }
+      } catch (error) {
+        alert(error)
+        console.error("Error submitting form:", error);
+      }
     };
 
-    // Validate using Zod
-    const validation = signupSchema.safeParse(data);
-
-    if (!validation.success) {
-      const errorMessages = validation.error.errors.reduce((acc, err) => {
-        acc[err.path[0]] = err.message;
-        return acc;
-      }, {});
-      setErrors(errorMessages);
-      return;
-    }
-
-    // Clear errors and proceed with form submission logic
-    setErrors({});
-    console.log("Form submitted successfully:", data);
-  };
-
+    
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <Card className="w-full max-w-xl bg-white p-4 rounded-3xl shadow-md">
@@ -90,6 +113,8 @@ function SignupDoctor() {
                   name="name"
                   type="text"
                   placeholder="Name"
+                  // value={name}
+                  // onChange={(e) => setName(e.target.value)}
                   className={errors.name ? "border-red-500" : ""}
                 />
                 {errors.name && (
@@ -102,6 +127,8 @@ function SignupDoctor() {
                   id="email"
                   name="email"
                   type="email"
+                  // value={email}
+                  // onChange={(e) => setEmail(e.target.value)}
                   placeholder="m@example.com"
                   className={errors.email ? "border-red-500" : ""}
                 />
@@ -116,6 +143,8 @@ function SignupDoctor() {
                   name="phone"
                   type="text"
                   placeholder="Mobile No."
+                  // value={phone}
+                  // onChange={(e) => setPhone(e.target.value)}
                   className={errors.phone ? "border-red-500" : ""}
                 />
                 {errors.phone && (
@@ -129,13 +158,15 @@ function SignupDoctor() {
                   name="password"
                   type="password"
                   placeholder="Password"
+                  // value={password}
+                  // onChange={(e) => setPassword(e.target.value)}
                   className={errors.password ? "border-red-500" : ""}
                 />
                 {errors.password && (
                   <p className="text-red-500 text-sm">{errors.password}</p>
                 )}
               </div>
-              <div className="grid gap-2">
+              {/* <div className="grid gap-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
@@ -147,40 +178,13 @@ function SignupDoctor() {
                 {errors.confirmPassword && (
                   <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
                 )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="hospitalCertificate">
-                  Hospital Verification Certificate
-                </Label>
-                <Input
-                  id="hospitalCertificate"
-                  name="hospitalCertificate"
-                  type="file"
-                  className={errors.hospitalCertificate ? "border-red-500" : ""}
-                />
-                {errors.hospitalCertificate && (
-                  <p className="text-red-500 text-sm">
-                    {errors.hospitalCertificate}
-                  </p>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="doctorCertificate">Doctor Certificate</Label>
-                <Input
-                  id="doctorCertificate"
-                  name="doctorCertificate"
-                  type="file"
-                  className={errors.doctorCertificate ? "border-red-500" : ""}
-                />
-                {errors.doctorCertificate && (
-                  <p className="text-red-500 text-sm">{errors.doctorCertificate}</p>
-                )}
-              </div>
+              </div> */}
             </div>
             <Button type="submit" className="w-full mt-4">
               Sign Up
             </Button>
           </form>
+
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
             <a href="/login" className="underline">
