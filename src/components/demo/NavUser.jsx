@@ -36,14 +36,8 @@ export function NavUser({ user, handleLogout }) {
   const userProfile = {
     name: user.name,
     email: user.email,
-    mobile: "1234567890",
-/**
- * Closes the profile dialog and refreshes the page.
- * Sets the state to close the profile dialog and calls the reload function
- * to refresh the page.
- */
-
-    role: "Doctor",
+    mobile: user.phone,
+    role: user.role,
   };
 
   return (

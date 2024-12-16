@@ -13,6 +13,9 @@ import Tablets from "./Patient/Tablets";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
+  const [email,setEmail] = useState(null);
+  const [name,setName] = useState(null);
+  const [phone,setPhone] = useState(null);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -34,7 +37,7 @@ function App() {
     <BrowserRouter>
     {isLoggedIn ? (
       <SidebarProvider>
-          <AppSidebar handleLogout={handleLogout} role={role}/>
+          <AppSidebar handleLogout={handleLogout} role={role} email={email} name={name} phone={phone}/>
               <div className="flex-1">
             <Routes>
               {role === "doctor" && (
@@ -56,7 +59,7 @@ function App() {
       </SidebarProvider>
     ) : (
       <Routes>
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} setEmail={setEmail} setName={setName} setPhone={setPhone} />} />
         <Route path="/signupd" element={<SignupDoctor />} />
         <Route path="/signupp" element={<SignupPatient />} />
         {/* <Route path= "/prof" element = {<Profile />} /> */}

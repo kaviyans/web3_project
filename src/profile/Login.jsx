@@ -13,7 +13,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import DropDown from "@/components/demo/DropDown";   
 
-function Login({ setIsLoggedIn , setRole}) {
+function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
   const navigate = useNavigate();
 
   // State for error messages
@@ -70,7 +70,9 @@ function Login({ setIsLoggedIn , setRole}) {
   
         setRole(data.role);
         setIsLoggedIn(true);
-  
+        setEmail(data.email);
+        setName(data.name);
+        setPhone(data.phone);
         navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
       } else {
         // Show error from backend

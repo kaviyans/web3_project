@@ -21,7 +21,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 
-export function AppSidebar({ handleLogout, role, ...props }) {
+export function AppSidebar({ handleLogout, role,email,name,phone, ...props }) {
   // Dynamic `navMain` based on role
   const navMain =
     role === "doctor"
@@ -59,8 +59,10 @@ export function AppSidebar({ handleLogout, role, ...props }) {
   // ];
 
   const user = {
-    name: "shadcn",
-    email: "m@example.com",
+    name: name,
+    email: email,
+    phone : phone,
+    role : role,
     avatar: "/avatars/shadcn.jpg",
   };
 
