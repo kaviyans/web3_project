@@ -11,7 +11,7 @@ import {
   } from "../components/ui/sidebar";
   import Tablepat from "@/components/demo/Tablepat";
   
-  function Dashboardpat() {
+  function Dashboardpat({email}) {
     return (
       <SidebarInset className="bg-black w-full h-full min-h-full">
         <header className="w-full flex h-16 items-center gap-2">
@@ -33,7 +33,7 @@ import {
           <h1>PRESCRIPTION QR</h1>
         </div>
         <div className="w-full p-6">
-          <Tablepat />
+          <Tablepat email={email} />
         </div>
       </SidebarInset>
     );

@@ -1,124 +1,68 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react";
+import QRCode from "react-qr-code";
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table"
+} from "../ui/table";
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog"
-import { Button } from "../ui/button";
+} from "../ui/dialog";
 
-const hospitalData = [
-  {
-    id: "HOSP001",
-    name: "City Hospital",
-    validity: "2024-12-31",
-    qrCodeUrl: "https://via.placeholder.com/150/0000FF/FFFFFF?text=QR+Code+1",
-  },
-  {
-    id: "HOSP002",
-    name: "General Health Clinic",
-    validity: "2024-01-15",
-    qrCodeUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=QR+Code+2",
-  },
-  {
-    id: "HOSP003",
-    name: "National Medical Center",
-    validity: "2024-06-30",
-    qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
-  },
-  {
-    id: "HOSP004",
-    name: "Green Valley Hospital",
-    validity: "2024-12-01",
-    qrCodeUrl: "https://via.placeholder.com/150/FFFF00/000000?text=QR+Code+4",
-  },
-  {
-    id: "HOSP001",
-    name: "City Hospital",
-    validity: "2024-12-31",
-    qrCodeUrl: "https://via.placeholder.com/150/0000FF/FFFFFF?text=QR+Code+1",
-  },
-  {
-    id: "HOSP002",
-    name: "General Health Clinic",
-    validity: "2025-01-15",
-    qrCodeUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=QR+Code+2",
-  },
-  {
-    id: "HOSP003",
-    name: "National Medical Center",
-    validity: "2024-06-30",
-    qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
-  },
-  {
-    id: "HOSP004",
-    name: "Green Valley Hospital",
-    validity: "2024-12-01",
-    qrCodeUrl: "https://via.placeholder.com/150/FFFF00/000000?text=QR+Code+4",
-  },
-  {
-    id: "HOSP001",
-    name: "City Hospital",
-    validity: "2024-12-31",
-    qrCodeUrl: "https://via.placeholder.com/150/0000FF/FFFFFF?text=QR+Code+1",
-  },
-  {
-    id: "HOSP002",
-    name: "General Health Clinic",
-    validity: "2025-01-15",
-    qrCodeUrl: "https://via.placeholder.com/150/FF0000/FFFFFF?text=QR+Code+2",
-  },
-  {
-    id: "HOSP003",
-    name: "National Medical Center",
-    validity: "2024-06-30",
-    qrCodeUrl: "https://via.placeholder.com/150/00FF00/FFFFFF?text=QR+Code+3",
-  },
-  {
-    id: "HOSP004",
-    name: "Green Valley Hospital",
-    validity: "2025-12-01",
-    qrCodeUrl: "https://via.placeholder.com/150/FFFF00/000000?text=QR+Code+4",
-  },
-]
-
-export default function TableWithQRCode() {
+export default function Tablepat({ email }) {
+  const [hospitalData, setHospitalData] = useState([]);
   const [selectedQr, setSelectedQr] = useState(null);
 
-  const handleQrClick = (qrCodeUrl) => {
-    setSelectedQr(qrCodeUrl);
+  useEffect(() => {
+    const fetchHospitalData = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/qrhash", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }), // Sending email as payload
+        });
+
+        const result = await response.json();
+        setHospitalData(result); // Result contains doctor, validity, and address
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchHospitalData();
+  }, [email]);
+
+  const handleQrClick = (qrCodeData) => {
+    setSelectedQr(qrCodeData);
   };
 
-  const handleClosePopup = () => {
-    setSelectedQr(null);
+  const handleDownloadQr = () => {
+    const canvas = document.querySelector("canvas");
+    if (canvas) {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "QRCode.png";
+      link.click();
+    }
   };
 
   const sortedHospitalData = hospitalData.sort((a, b) => {
-    const dateA = new Date(a.validity);
-    const dateB = new Date(b.validity);
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
     return dateB - dateA;
   });
-
-  const handleDownloadQr = () => {
-    const link = document.createElement("a");
-    link.href = selectedQr;
-    link.download = "QRCode.png";
-    link.click();
-  };
 
   const isExpired = (validityDate) => {
     const currentDate = new Date();
@@ -132,45 +76,43 @@ export default function TableWithQRCode() {
         <TableCaption>Hospital validity and QR codes.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[400px]">Hospital id</TableHead>
-            <TableHead className="w-[400px]">Hospital Name</TableHead>
+            <TableHead>Doctor Name</TableHead>
             <TableHead>Validity Date</TableHead>
-            <TableHead>QR Code</TableHead>
+            <TableHead>QR Code (Address)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {sortedHospitalData.map((hospital) => {
-            const expired = isExpired(hospital.validity); 
+            const expired = isExpired(hospital.date);
 
             return (
               <TableRow
                 key={hospital.id}
-                className={`h-16 ${expired ? "bg-gray-600" : ""}`} // Add background color for expired rows
+                className={`h-16 ${expired ? "bg-gray-600" : ""}`}
               >
-                <TableCell className="w-[200px] font-medium">{hospital.id}</TableCell>
-                <TableCell className="w-[200px] font-medium">{hospital.name}</TableCell>
-                <TableCell className="w-[400px] font-medium">{hospital.validity}</TableCell>
-                <TableCell className="w-[400px] font-medium">
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                  <button
-                    className={`text-blue-600 underline ${expired ? "cursor-not-allowed" : ""}`}
-                    onClick={() => !expired && handleQrClick(hospital.qrCodeUrl)}
-                    disabled={expired} 
-                  >
-                    View QR Code
-                  </button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>QR Code</DialogTitle>
-                      <DialogDescription>
-                        Download this qr code which contains the prescription
-                      </DialogDescription>
-                    </DialogHeader>
-                        <img src={selectedQr} alt="QR Code" className="mb-4 mx-auto" />
-                        <div className="flex flex-col">
+                <TableCell className="font-medium">{hospital.DoctorName}</TableCell>
+                <TableCell className="font-medium">{hospital.date}</TableCell>
+                <TableCell>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button
+                        className={`text-blue-600 underline ${expired ? "cursor-not-allowed" : ""}`}
+                        onClick={() => !expired && handleQrClick(hospital.transaction_address)}
+                        disabled={expired}
+                      >
+                        View QR Code
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>QR Code</DialogTitle>
+                        <DialogDescription>
+                          Download this QR code which contains the hospital's address.
+                        </DialogDescription>
+                      </DialogHeader>
+                      {selectedQr && (
+                        <div className="flex flex-col items-center">
+                          <QRCode value={selectedQr} className="mb-4" />
                           <button
                             onClick={handleDownloadQr}
                             className="inline-block bg-blue-500 text-white px-4 py-2 rounded"
@@ -178,12 +120,9 @@ export default function TableWithQRCode() {
                             Download QR Code
                           </button>
                         </div>
-                  </DialogContent>
-                </Dialog>
-
-
-
-                  
+                      )}
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             );
