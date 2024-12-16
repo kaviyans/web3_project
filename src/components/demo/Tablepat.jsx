@@ -140,7 +140,7 @@ export default function TableWithQRCode() {
         </TableHeader>
         <TableBody>
           {sortedHospitalData.map((hospital) => {
-            const expired = isExpired(hospital.validity); // Check if the validity date is expired
+            const expired = isExpired(hospital.validity); 
 
             return (
               <TableRow
@@ -157,7 +157,7 @@ export default function TableWithQRCode() {
                   <button
                     className={`text-blue-600 underline ${expired ? "cursor-not-allowed" : ""}`}
                     onClick={() => !expired && handleQrClick(hospital.qrCodeUrl)}
-                    disabled={expired} // Disable button if expired
+                    disabled={expired} 
                   >
                     View QR Code
                   </button>

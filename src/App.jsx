@@ -43,7 +43,7 @@ function App() {
               {role === "doctor" && (
                 <>
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/prescription" element={<Prescription />} />
+                  <Route path="/prescription" element={<Prescription name={name} />} />
                 </>
               )}
               {role === "patient" && (

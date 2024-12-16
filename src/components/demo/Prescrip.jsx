@@ -12,10 +12,11 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import Tabletsearch from "./Tabletsearch";
 
-function Prescrip() {
+function Prescrip({ name }) {
   const [errors, setErrors] = useState({});
   const [tablets, setTablets] = useState([{ tablet: "", count: "", times: [] }]);
   const [patientEmail, setPatientEmail] = useState("");
+  const [date, setDate] = useState("");
 
   const handleAddTablet = () => {
     setTablets([...tablets, { tablet: "", count: "", times: [] }]);
@@ -41,16 +42,27 @@ function Prescrip() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate email
+    // Validate email and name
+    const newErrors = {};
     if (!patientEmail.trim()) {
-      setErrors({ email: "Email is required." });
+      newErrors.email = "Email is required.";
+    }
+    if (!date.trim()) {
+      newErrors.date = "Date is required.";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
     // Prepare JSON payload
     const payload = {
+      name,
       patientEmail,
-      prescription: tablets.filter((t) => t.tablet), // Remove tablets without names
+      date,
+      prescription: tablets.filter((t) => t.tablet), 
     };
 
     console.log(payload);
@@ -65,7 +77,7 @@ function Prescrip() {
         body: JSON.stringify(payload),
       });
       const result = await response.json();
-      console.log(result)
+      console.log(result);
       if (!result.ok) {
         alert("Prescription submitted successfully!", result.Tx_address);
       } else {
@@ -86,7 +98,7 @@ function Prescrip() {
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 text-black">
             <div className="grid gap-2">
-              <Label htmlFor="email">Patient email</Label>
+              <Label htmlFor="email">Patient Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -101,9 +113,24 @@ function Prescrip() {
               )}
             </div>
 
+            <div className="grid gap-2">
+              <Label htmlFor="date">Prescription Date</Label>
+              <Input
+                id="date"
+                name="date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className={errors.date ? "border-red-500" : ""}
+              />
+              {errors.date && (
+                <p className="text-red-500 text-sm">{errors.date}</p>
+              )}
+            </div>
+
             {tablets.map((tablet, index) => (
               <div key={index} className="grid gap-4 border-t pt-4 relative">
-                <div className="absolute top-2 right-2 bg-red-200 rounded-2xl ">
+                <div className="absolute top-2 right-2 bg-red-200 rounded-2xl">
                   <X
                     type="button"
                     className="text-red-500 cursor-pointer"
