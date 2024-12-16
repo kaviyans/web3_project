@@ -19,9 +19,10 @@ function Signin() {
   const signupSchema = z.object({
     name: z.string().nonempty("Name is required."),
     email: z.string().email("Invalid email address."),
-    mobile: z
-      .string()
-      .regex(/^\d{10}$/, "Mobile number must be 10 digits."),
+    phone: z
+    .string()
+    .length(10, "Phone number must be exactly 10 digits.")
+    .regex(/^\d+$/, "Phone number must contain only digits."),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters long."),
@@ -39,8 +40,9 @@ function Signin() {
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
-      mobile: formData.get("mobile"),
+      phone: formData.get("phone"),
       password: formData.get("password"),
+      confirmPassword: formData.get("confirmPassword"),
     };
 
     const validation = signupSchema.safeParse(data);
@@ -58,15 +60,23 @@ function Signin() {
     setErrors({}); // Clear errors
 
     try {
-      const response = await fetch("http://localhost:8000/signuppat", {
+      const response = await fetch("http://localhost:8000/patient", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          password: data.password,
+          role:"patient"
+        }),
       });
-
-      if (response.ok) {
+      
+      const result  = await response.json();
+      console.log(result);
+      if (result.message === "Patient created successfully") {
         setSuccessMessage("Signup successful! You can now log in.");
       } else {
         const errorData = await response.json();
@@ -116,16 +126,16 @@ function Signin() {
                 )}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="mobile">Mobile No.</Label>
+                <Label htmlFor="phone">Phone No.</Label>
                 <Input
-                  id="mobile"
-                  name="mobile"
-                  type="text"
-                  placeholder="Mobile No."
-                  className={errors.mobile ? "border-red-500" : ""}
+                  id="phone"
+                  name="phone"
+                  type= "text"
+                  placeholder="Phone No."
+                  className={errors.phone ? "border-red-500" : ""}
                 />
-                {errors.mobile && (
-                  <p className="text-red-500 text-sm">{errors.mobile}</p>
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone}</p>
                 )}
               </div>
               <div className="grid gap-2">
