@@ -12,7 +12,7 @@ import {
 import Prescrip from "@/components/demo/Prescrip";
 import LineCharpres from "@/components/demo/LineChart";
 
-function Prescription() {
+function Prescription({name}) {
   return (
     <SidebarInset className="bg-black">
     <header className="flex h-16 shrink-0 items-center gap-2">
@@ -33,7 +33,7 @@ function Prescription() {
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
     <div className="">
         <div className="rounded-xl md:col-span-2 flex justify-center ">
-          <Prescrip />
+          <Prescrip name={name}/>
         </div>
       </div>
 
