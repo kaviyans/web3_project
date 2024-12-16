@@ -1,9 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import {  ChevronsUpDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import {
   Command,
@@ -163,53 +162,49 @@ const frameworks =  [
   ];
 
 
-export default function Tabletsearch() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="flex w-[200px] justify-between"
-        >
-          {value
-            ? frameworks.find((framework) => framework.name === value)?.label
-            : "Select Tablet..."}
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
-              {frameworks.map((framework) => (
-                <CommandItem
-                  key={framework.name}
-                  value={framework.name}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  {framework.name}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === framework.name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
-}
+  export default function Tabletsearch({ onSelect }) {
+    const [open, setOpen] = React.useState(false);
+    const [value, setValue] = React.useState("");
+  
+  
+    const handleSelect = (tabletName) => {
+      setValue(tabletName);
+      onSelect(tabletName); // Notify parent component
+      setOpen(false);
+    };
+  
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="flex w-[200px] justify-between"
+          >
+            {value || "Select Tablet..."}
+            <ChevronsUpDown className="opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput placeholder="Search framework..." />
+            <CommandList>
+              <CommandEmpty>No tablet found.</CommandEmpty>
+              <CommandGroup>
+                {frameworks.map((framework) => (
+                  <CommandItem
+                    key={framework.name}
+                    onSelect={() => handleSelect(framework.name)}
+                  >
+                    {framework.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+  

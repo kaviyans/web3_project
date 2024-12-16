@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { z } from "zod";
 import { Button } from "../ui/button";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -16,37 +15,7 @@ import Tabletsearch from "./Tabletsearch";
 function Prescrip() {
   const [errors, setErrors] = useState({});
   const [tablets, setTablets] = useState([{ tablet: "", count: "", times: [] }]);
-
-  const loginSchema = z.object({
-    username: z.string().nonempty("Username is required."),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters long.")
-      .nonempty("Password is required."),
-  });
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const data = {
-      username: formData.get("username"),
-      password: formData.get("password"),
-    };
-
-    const validation = loginSchema.safeParse(data);
-
-    if (!validation.success) {
-      const errorMessages = validation.error.errors.reduce((acc, err) => {
-        acc[err.path[0]] = err.message;
-        return acc;
-      }, {});
-      setErrors(errorMessages);
-      return;
-    }
-
-    setErrors({});
-  };
+  const [patientEmail, setPatientEmail] = useState("");
 
   const handleAddTablet = () => {
     setTablets([...tablets, { tablet: "", count: "", times: [] }]);
@@ -63,6 +32,49 @@ function Prescrip() {
     setTablets(newTablets);
   };
 
+  const handleTabletSelect = (index, tabletName) => {
+    const newTablets = [...tablets];
+    newTablets[index].tablet = tabletName;
+    setTablets(newTablets);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate email
+    if (!patientEmail.trim()) {
+      setErrors({ email: "Email is required." });
+      return;
+    }
+
+    // Prepare JSON payload
+    const payload = {
+      patientEmail,
+      prescription: tablets.filter((t) => t.tablet), // Remove tablets without names
+    };
+
+    console.log(payload);
+
+    try {
+      // Send to backend
+      const response = await fetch("http://127.0.0.1:8000/prescriptions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        alert("Prescription submitted successfully!");
+      } else {
+        alert("Failed to submit prescription.");
+      }
+    } catch (error) {
+      console.error("Error submitting prescription:", error);
+    }
+  };
+
   return (
     <Card className="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-md">
       <CardHeader>
@@ -70,53 +82,43 @@ function Prescrip() {
         <CardDescription>Enter patient details and prescription.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           <div className="grid gap-4 text-black">
             <div className="grid gap-2">
-              <Label htmlFor="username">Patient email</Label>
+              <Label htmlFor="email">Patient email</Label>
               <Input
-                id="username"
-                name="username"
+                id="email"
+                name="email"
                 type="email"
-                placeholder="Username"
-                className={errors.username ? "border-red-500" : ""}
+                placeholder="Enter patient email"
+                value={patientEmail}
+                onChange={(e) => setPatientEmail(e.target.value)}
+                className={errors.email ? "border-red-500" : ""}
               />
-              {errors.username && (
-                <p className="text-red-500 text-sm">{errors.username}</p>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
               )}
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                className={errors.password ? "border-red-500" : ""}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
-              )}
-            </div>
+
             {tablets.map((tablet, index) => (
               <div key={index} className="grid gap-4 border-t pt-4 relative">
                 <div className="absolute top-2 right-2 bg-red-200 rounded-2xl ">
-                    <X
-                      type="button"
-                      className="text-red-500 cursor-pointer"
-                      onClick={() => handleRemoveTablet(index)}
-                    />
+                  <X
+                    type="button"
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => handleRemoveTablet(index)}
+                  />
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                  <Label htmlFor={`tablet-${index}`}>Tablet Name</Label>
-                    <Tabletsearch />
+                    <Label>Tablet Name</Label>
+                    <Tabletsearch
+                      onSelect={(name) => handleTabletSelect(index, name)}
+                    />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor={`count-${index}`}>Count</Label>
+                    <Label>Count</Label>
                     <Input
-                      id={`count-${index}`}
-                      name={`count-${index}`}
                       type="number"
                       placeholder="Count"
                       min={1}
