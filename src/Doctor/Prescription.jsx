@@ -37,9 +37,9 @@ function Prescription() {
         </div>
       </div>
 
-      <div className="min-h-[10vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >
+      {/* <div className="min-h-[10vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >
         <LineCharpres />
-      </div>
+      </div> */}
     </div>
   </SidebarInset>
   );

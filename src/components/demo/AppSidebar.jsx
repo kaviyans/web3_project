@@ -88,7 +88,7 @@ export function AppSidebar({ handleLogout, role, ...props }) {
       </SidebarHeader>
       <SidebarContent className="bg-black">
         <NavMain items={navMain} />
-        {role==="patient" && <NavSecondary  className="mt-auto" />}
+         <NavSecondary  className="mt-auto" />
       </SidebarContent>
       <SidebarFooter className="bg-black border-t border-gray-700">
         <NavUser user={user} handleLogout={handleLogout} />

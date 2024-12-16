@@ -30,7 +30,7 @@ import {
           </div>
         </header>
         <div className="flex justify-center items-center text-white text-2xl">
-          <h1>PRESCRITION QR</h1>
+          <h1>PRESCRIPTION QR</h1>
         </div>
         <div className="w-full p-6">
           <Tablepat />

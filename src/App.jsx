@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./profile/Login";
-import Signin from "./profile/SignupPatient";
 import Dashboard from "./Doctor/Dashboard";
 import SignupDoctor from "./profile/SignupDoctor";
 import SignupPatient from "./profile/SignupPatient";
@@ -57,7 +56,6 @@ function App() {
     ) : (
       <Routes>
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
-        <Route path="/signup" element={<Signin />} />
         <Route path="/signupd" element={<SignupDoctor />} />
         <Route path="/signupp" element={<SignupPatient />} />
         {/* <Route path= "/prof" element = {<Profile />} /> */}

@@ -11,7 +11,7 @@ import {
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import DropDown from "@/components/demo/DropDown";
+import DropDown from "@/components/demo/DropDown";   
 
 function Login({ setIsLoggedIn , setRole}) {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ function Login({ setIsLoggedIn , setRole}) {
 
   // Zod schema for validation
   const loginSchema = z.object({
-    username: z.string().nonempty("Username is required."),
+    email: z.string().email("Invalid email address.").nonempty("Email is required."),
     role: z.enum(["doctor", "patient"], { required_error: "Role is required." }),
     password: z
       .string()
@@ -34,7 +34,7 @@ function Login({ setIsLoggedIn , setRole}) {
     const formData = new FormData(e.target);
 
     const data = {
-      username: formData.get("username"),
+      email: formData.get("email"),
       role: formData.get("role"),
       password: formData.get("password"),
     };
@@ -58,7 +58,6 @@ function Login({ setIsLoggedIn , setRole}) {
     setRole(data.role);
     setIsLoggedIn(true);
 
-    // Navigate based on role
     navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
   };
   
@@ -76,16 +75,16 @@ function Login({ setIsLoggedIn , setRole}) {
           <form onSubmit={handleLogin}>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">Email</Label>
                 <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  placeholder="Username"
-                  className={errors.username ? "border-red-500" : ""}
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="email"
+                  className={errors.email ? "border-red-500" : ""}
                 />
-                {errors.username && (
-                  <p className="text-red-500 text-sm">{errors.username}</p>
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
                 )}
               </div>
               <div className="grid gap-2">
@@ -95,7 +94,7 @@ function Login({ setIsLoggedIn , setRole}) {
                 <select
                   id="role"
                   name="role"
-                  className={`bg-white border rounded-md p-2 ${
+                  className={`bg-white text-sm border rounded-md p-2 ${
                     errors.role ? "border-red-500" : ""
                   }`}
                 >

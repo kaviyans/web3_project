@@ -73,11 +73,11 @@ function Prescrip() {
         <form onSubmit={handleLogin}>
           <div className="grid gap-4 text-black">
             <div className="grid gap-2">
-              <Label htmlFor="username">Patient Username</Label>
+              <Label htmlFor="username">Patient email</Label>
               <Input
                 id="username"
                 name="username"
-                type="text"
+                type="email"
                 placeholder="Username"
                 className={errors.username ? "border-red-500" : ""}
               />
@@ -110,17 +110,6 @@ function Prescrip() {
                 <div className="flex gap-4">
                   <div className="flex-1">
                   <Label htmlFor={`tablet-${index}`}>Tablet Name</Label>
-                    {/* 
-                    <Input
-                      id={`tablet-${index}`}
-                      name={`tablet-${index}`}
-                      type="text"
-                      placeholder="Tablet Name"
-                      value={tablet.tablet}
-                      onChange={(e) =>
-                        handleTabletChange(index, "tablet", e.target.value)
-                      }
-                    /> */}
                     <Tabletsearch />
                   </div>
                   <div className="flex-1">
@@ -130,6 +119,8 @@ function Prescrip() {
                       name={`count-${index}`}
                       type="number"
                       placeholder="Count"
+                      min={1}
+                      max={100}
                       value={tablet.count}
                       onChange={(e) =>
                         handleTabletChange(index, "count", e.target.value)
@@ -140,7 +131,7 @@ function Prescrip() {
                 <div className="flex gap-4">
                   <div>
                     <Label>Time of Day</Label>
-                    <div className="flex gap-4">
+                    <div className="flex gap-44">
                       {[
                         { label: "Morning", value: "morning" },
                         { label: "Afternoon", value: "afternoon" },
