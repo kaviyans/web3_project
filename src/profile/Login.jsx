@@ -29,18 +29,19 @@ function Login({ setIsLoggedIn , setRole}) {
       .nonempty("Password is required."),
   });
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-
+  
     const data = {
       email: formData.get("email"),
       role: formData.get("role"),
       password: formData.get("password"),
     };
-
+  
+    // Validate data with Zod
     const validation = loginSchema.safeParse(data);
-
+  
     if (!validation.success) {
       const errorMessages = validation.error.errors.reduce((acc, err) => {
         acc[err.path[0]] = err.message;
@@ -49,17 +50,39 @@ function Login({ setIsLoggedIn , setRole}) {
       setErrors(errorMessages);
       return;
     }
-
+  
     setErrors({});
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", data.role);
-
-    // Synchronize state immediately
-    setRole(data.role);
-    setIsLoggedIn(true);
-
-    navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
+  
+    try {
+      const response = await fetch("http://your-backend-url/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        // Success: Store details in localStorage and navigate
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", result.role);
+  
+        setRole(result.role);
+        setIsLoggedIn(true);
+  
+        navigate(result.role === "doctor" ? "/dashboard" : "/dashboardpat");
+      } else {
+        // Show error from backend
+        setErrors({ form: result.message || "Login failed. Please try again." });
+      }
+    } catch (error) {
+      // Handle network or other errors
+      setErrors({ form: "An error occurred. Please try again later." });
+    }
   };
+  
   
 
   return (
@@ -126,6 +149,7 @@ function Login({ setIsLoggedIn , setRole}) {
               </Button>
             </div>
           </form>
+          {errors.form && <p className="text-red-500 text-sm">{errors.form}</p>}
 
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account? <DropDown />
