@@ -41,7 +41,7 @@ function Prescrip({ name }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(name)
     // Validate email and name
     const newErrors = {};
     if (!patientEmail.trim()) {
