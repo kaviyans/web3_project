@@ -25,26 +25,29 @@ export default function Tablepat({ email }) {
 
   useEffect(() => {
     const fetchHospitalData = async () => {
+      console.log(typeof email)
       try {
         const response = await fetch("http://127.0.0.1:8000/qrhash", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify( email ), // Sending email as payload
+          body: JSON.stringify({ email }), // Ensure email is stringified as JSON
         });
 
         const result = await response.json();
-        setHospitalData(result); 
-        // console.log(result); /// / Result contains doctor, validity, and address
+        if (result && result.result) {
+          setHospitalData(result.result); // Access the array inside `result`
+        } else {
+          console.error("Invalid response format:", result);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    // console.log(email)
 
     fetchHospitalData();
-  }, []);
+  }, [email]);
 
   const handleQrClick = (qrCodeData) => {
     setSelectedQr(qrCodeData);
@@ -60,18 +63,13 @@ export default function Tablepat({ email }) {
     }
   };
 
-  const sortedHospitalData = hospitalData.sort((a, b) => {
-    const parseDate = (dateStr) => {
-      if (!dateStr) return new Date(0); 
-      return new Date(dateStr.replace(/-/g, "/")); 
-    };
-  
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
-  
-    return dateB - dateA;
-  });
-  
+  const sortedHospitalData = hospitalData
+    .slice() // Create a shallow copy to avoid mutating state
+    .sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA; // Sort descending by date
+    });
 
   const isExpired = (validityDate) => {
     const currentDate = new Date();
@@ -96,7 +94,7 @@ export default function Tablepat({ email }) {
 
             return (
               <TableRow
-                key={hospital.id}
+                key={hospital.transaction_address}
                 className={`h-16 ${expired ? "bg-gray-600" : ""}`}
               >
                 <TableCell className="font-medium">{hospital.DoctorName}</TableCell>

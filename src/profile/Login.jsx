@@ -22,7 +22,7 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
   // Zod schema for validation
   const loginSchema = z.object({
     email: z.string().email("Invalid email address.").nonempty("Email is required."),
-    role: z.enum(["doctor", "patient"], { required_error: "Role is required." }),
+    role: z.enum(["doctor", "patient" , "pharmist"], { required_error: "Role is required." }),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters long.")
@@ -62,10 +62,14 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      console.log(result)
       console.log(result.user)
       if (result.message === "Login successful") {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", data.role);
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("name", result.user.name);
+        localStorage.setItem("phone", result.user.phone);
   
         setRole(data.role);
         setIsLoggedIn(true);
@@ -73,7 +77,7 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
         setName(result.user.name);
         setPhone(result.user.phone);
         console.log(data)
-        navigate(data.role === "doctor" ? "/dashboard" : "/dashboardpat");
+        navigate(data.role === "doctor" ? "/dashboard" : data.role=== "patient" ? "/dashboardpat" : "/qrfile");
       } else {
         // Show error from backend
         setErrors({ form: result.message || "Login failed. Please try again." });
@@ -125,6 +129,7 @@ function Login({ setIsLoggedIn , setRole , setEmail , setName , setPhone}) {
                   <option value="">Select Role</option>
                   <option value="doctor">Doctor</option>
                   <option value="patient">Patient</option>
+                  <option value="pharmist">pharmist</option>
                 </select>
                 {errors.role && (
                   <p className="text-red-500 text-sm">{errors.role}</p>

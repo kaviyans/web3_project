@@ -20,6 +20,8 @@ function DropDown() {
       navigate("/signupd");
     } else if (role === "Patient") {
       navigate("/signupp");
+    }else {
+      navigate("/signupphar");
     }
 };
 
@@ -32,6 +34,7 @@ function DropDown() {
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition} defaultValue="Doctor">
           <DropdownMenuRadioItem  onClick={() => handleSignupRedirect("Doctor")} value="Doctor">Doctor</DropdownMenuRadioItem>
           <DropdownMenuRadioItem  onClick={() => handleSignupRedirect("Patient")} value="Patient">Patient</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem  onClick={() => handleSignupRedirect("pharmist")} value="Patient">Pharmist</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

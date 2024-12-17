@@ -9,6 +9,9 @@ import { AppSidebar } from "./components/demo/AppSidebar";
 import Prescription from "./Doctor/Prescription";
 import Dashboardpat from "./Patient/Dashboardpat";
 import Tablets from "./Patient/Tablets";
+import Qrfile from "./pharm/Qrfile";
+import SignupPhar from "./profile/SignupPhar";
+import { set } from "zod";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,6 +23,13 @@ function App() {
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const userRole = localStorage.getItem("role");
+    const userEmail = localStorage.getItem("email");
+    const userName = localStorage.getItem("name");
+    const userPhone = localStorage.getItem("phone");
+
+    setName(userName);
+    setPhone(userPhone);
+    setEmail(userEmail);
     setIsLoggedIn(loggedIn);
     setRole(userRole);
     
@@ -30,6 +40,9 @@ function App() {
     setRole(null);
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
+    localStorage.removeItem("email");
+    localStorage.removeItem("name");
+    localStorage.removeItem("phone");
     console.log("User logged out");
   };
 
@@ -52,8 +65,13 @@ function App() {
                   <Route path="/tablets" element={<Tablets />} />
                 </>
               )}
+              {role === "pharmist" && (
+                <>
+                  <Route path="/qrfile" element={<Qrfile />} />
+                </>
+              )}
               {/* Default route */}
-              <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : "/dashboardpat"} />} />
+              <Route path="*" element={<Navigate to={role === "doctor" ? "/dashboard" : role==="patient" ? "/dashboardpat" : "/qrfile"} />} />
             </Routes>
           </div>
       </SidebarProvider>
@@ -62,7 +80,7 @@ function App() {
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} setEmail={setEmail} setName={setName} setPhone={setPhone} />} />
         <Route path="/signupd" element={<SignupDoctor />} />
         <Route path="/signupp" element={<SignupPatient />} />
-        {/* <Route path= "/prof" element = {<Profile />} /> */}
+        <Route path= "/signupphar" element = {<SignupPhar />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     )}
