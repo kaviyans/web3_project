@@ -59,10 +59,17 @@ export default function Tablepat({ email }) {
   };
 
   const sortedHospitalData = hospitalData.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
+    const parseDate = (dateStr) => {
+      if (!dateStr) return new Date(0); 
+      return new Date(dateStr.replace(/-/g, "/")); 
+    };
+  
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+  
     return dateB - dateA;
   });
+  
 
   const isExpired = (validityDate) => {
     const currentDate = new Date();
