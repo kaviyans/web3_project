@@ -31,18 +31,20 @@ export default function Tablepat({ email }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email }), // Sending email as payload
+          body: JSON.stringify( email ), // Sending email as payload
         });
 
         const result = await response.json();
-        setHospitalData(result); // Result contains doctor, validity, and address
+        setHospitalData(result); 
+        // console.log(result); /// / Result contains doctor, validity, and address
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+    // console.log(email)
 
     fetchHospitalData();
-  }, [email]);
+  }, []);
 
   const handleQrClick = (qrCodeData) => {
     setSelectedQr(qrCodeData);
