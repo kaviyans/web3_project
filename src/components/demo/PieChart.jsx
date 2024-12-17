@@ -25,19 +25,19 @@ const chartConfig = {
     label: "Visitors",
   },
   chrome: {
-    label: "Chrome",
+    label: "Cancer",
     color: "hsl(var(--chart-1))",
   },
   safari: {
-    label: "Safari",
+    label: "Fever",
     color: "hsl(var(--chart-2))",
   },
   firefox: {
-    label: "Firefox",
+    label: "HIV",
     color: "hsl(var(--chart-3))",
   },
   edge: {
-    label: "Edge",
+    label: "body pain",
     color: "hsl(var(--chart-4))",
   },
   other: {
@@ -48,7 +48,7 @@ const chartConfig = {
 
 export function Pchart() {
   return (
-    <Card className="flex flex-col bg-white">
+    <Card className=" flex flex-col bg-white">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pie Chart - Legend</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
